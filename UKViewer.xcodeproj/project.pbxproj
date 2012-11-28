@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4216760E1666CA7C003110DC /* vandalized.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4216760D1666CA7C003110DC /* vandalized.jpg */; };
 		421C5F5D164D76A300F3568D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 421C5F5C164D76A300F3568D /* UIKit.framework */; };
 		421C5F5F164D76A300F3568D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 421C5F5E164D76A300F3568D /* Foundation.framework */; };
 		421C5F61164D76A300F3568D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 421C5F60164D76A300F3568D /* CoreGraphics.framework */; };
@@ -24,6 +25,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4216760D1666CA7C003110DC /* vandalized.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = vandalized.jpg; sourceTree = "<group>"; };
 		421C5F58164D76A300F3568D /* UKViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UKViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		421C5F5C164D76A300F3568D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		421C5F5E164D76A300F3568D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -110,6 +112,7 @@
 			isa = PBXGroup;
 			children = (
 				421C5F82164D996F00F3568D /* home_button.png */,
+				4216760D1666CA7C003110DC /* vandalized.jpg */,
 				421C5F79164D771200F3568D /* Chad_Cover_Image.jpg */,
 				421C5F64164D76A300F3568D /* UKViewer-Info.plist */,
 				421C5F7B164D7E7700F3568D /* button.jpg */,
@@ -177,6 +180,7 @@
 				421C5F7C164D7E7700F3568D /* button.jpg in Resources */,
 				421C5F81164D813F00F3568D /* pageViewerViewController.xib in Resources */,
 				421C5F83164D996F00F3568D /* home_button.png in Resources */,
+				4216760E1666CA7C003110DC /* vandalized.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -305,6 +309,7 @@
 				421C5F78164D76A300F3568D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

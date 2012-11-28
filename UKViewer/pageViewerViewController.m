@@ -5,7 +5,9 @@
 //  Created by John B on 11/9/12.
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
-#define ZOOM_VIEW_TAG 100
+#define BACKGROUND_TAG 100
+#define LAYER_1_TAG 200
+#define COMP_VIEW_TAG 300
 
 #import "pageViewerViewController.h"
 
@@ -18,7 +20,11 @@
 @synthesize urn = urn;
 @synthesize backGround = backGround;
 @synthesize bgController = bgController;
+@synthesize layer1Controller = layer1Controller;
 @synthesize zoomView = zoomView;
+@synthesize seg = seg;
+@synthesize compositView = compositView;
+@synthesize layer1 = layer1;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -33,7 +39,6 @@
         
         [self guesterEvents];
         
-
         
     }
     
@@ -104,7 +109,24 @@
     [progress setFrame:progFrame];
     [navBar addSubview:progress];
 
+    //creat seg control
     
+    //seg Frame
+    CGRect segFrame;
+    segFrame.origin.x = navFrame.size.width * 8/10;
+    segFrame.origin.y = navFrame.size.height*1/6;
+    segFrame.size.width = navFrame.size.width/6;
+    segFrame.size.height = navFrame.size.height/2;
+    
+    //create the seg layers
+    seg = [[UISegmentedControl alloc ] initWithFrame: segFrame];
+    [seg insertSegmentWithTitle:@"layer0" atIndex:0 animated:NO];
+    [seg insertSegmentWithTitle:@"layer1" atIndex:1 animated:NO];
+    
+    [seg addTarget:self action:@selector(segChanged:) forControlEvents:UIControlEventValueChanged];
+
+    //add seg to the nave bar
+    [navBar addSubview:seg];    
     return;
 }
 
@@ -136,15 +158,16 @@
     //UIImage
     backGround= [[UIImage alloc] init];
     backGround = [urn startImage];
-    
+
     //UIScrollView
     zoomView = [[UIScrollView alloc] initWithFrame:[[self view] bounds]];
     [zoomView setFrame:screensize];
     [zoomView setBounces:NO];
     
-   // [zoomView setBackgroundColor:[UIColor blackColor]];
+    [zoomView setBackgroundColor:[UIColor blackColor]];
     [zoomView setDelegate:self];
     [self.view addSubview:zoomView];
+    
     
     //float minimumScale = [zoomView frame].size.width  / [bgController frame].size.width;
     float minimumScale = 1;
@@ -157,12 +180,33 @@
      
     
     
-    //UIImageView
+    //Composite view
+    compositView = [[UIView alloc] initWithFrame:screensize];
+    [compositView setTag:COMP_VIEW_TAG];
+    [zoomView addSubview:compositView];
+
+
+    //Layer one
+    layer1 = [[UIImage alloc] init];
+    layer1 = [UIImage imageNamed:@"vandalized.jpg"];
+    
+    //UIImageView background image (layer 0)
     bgController = [[UIImageView alloc ]initWithImage:backGround];
     [bgController setFrame: [zoomView frame] ];
-    [bgController setTag:ZOOM_VIEW_TAG];
+    [bgController setTag:BACKGROUND_TAG];
     
-    [zoomView addSubview:bgController];
+    [compositView addSubview:bgController];
+
+    
+
+    
+    layer1Controller = [[UIImageView alloc] initWithImage:layer1];
+    [bgController setFrame: [zoomView frame] ];
+    [layer1Controller setTag:LAYER_1_TAG];
+    [compositView addSubview:layer1Controller];
+    
+    
+    
 
     
 
@@ -271,7 +315,7 @@
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView 
 {
     
-    return [zoomView viewWithTag:ZOOM_VIEW_TAG];
+    return [zoomView viewWithTag:COMP_VIEW_TAG];
 }
 
 
@@ -318,6 +362,43 @@
     
     return zoomRect;
 }
+
+
+
+- (void)segChanged:(id) sender
+{
+    NSLog(@"segHasChanged");
+    
+    if( [sender selectedSegmentIndex] ==0 )
+    {
+        NSLog(@"seg0");
+        [UIView transitionFromView:layer1Controller
+                        toView:bgController
+                      duration:1.0
+                       options:UIViewAnimationOptionTransitionCrossDissolve
+                    completion:^(BOOL finished) {
+                        // animation completed
+                    }];
+    }
+    else if( [sender selectedSegmentIndex] ==1 )
+    {
+        NSLog(@"seg1");
+            [UIView transitionFromView:bgController
+                                toView:layer1Controller
+                              duration:1.0
+                               options:UIViewAnimationOptionTransitionCrossDissolve
+                            completion:^(BOOL finished){
+                                // animation completed
+                        }];
+    }
+    else
+        {}
+        
+        return;
+    
+}
+
+
 
 
 
