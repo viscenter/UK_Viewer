@@ -17,8 +17,8 @@
 @synthesize navBar= navBar;
 @synthesize urn = urn;
 @synthesize backGround = backGround;
-//@synthesize bgController = bgController;
-//@synthesize zoomView = zoomView;
+@synthesize bgController = bgController;
+@synthesize zoomView = zoomView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -94,7 +94,8 @@
     CGRect progFrame;
     
     //Progress Bar Frame
-    progFrame.origin.x = buttonFrame.size.width;
+    //progFrame.origin.x = buttonFrame.size.width + navFrame.size.width / 20;
+    progFrame.origin.x = navFrame.size.width/3;
     progFrame.origin.y = navFrame.size.height*1/3;
     progFrame.size.height = navFrame.size.height;
     progFrame.size.width = navFrame.size.width/3;
@@ -113,7 +114,7 @@
     
     if(!urn){
         urn = [[urn_cite alloc] initWithMachine:@"http://amphoreus.hpcc.uh.edu/tomcat/chsimg/Img?&request=GetBinaryImage&urn=" 
-                                           size:@"500" 
+                                           size:@"1000" 
                                            base:@"urn:cite:fufolioimg:"
                                            type:@"ChadRGB." 
                                             doc:@"Chad"
@@ -138,7 +139,7 @@
     
     //UIScrollView
     zoomView = [[UIScrollView alloc] initWithFrame:[[self view] bounds]];
-    //[zoomView setFrame:screensize];
+    [zoomView setFrame:screensize];
     [zoomView setBounces:NO];
     
    // [zoomView setBackgroundColor:[UIColor blackColor]];
@@ -264,22 +265,7 @@
      
 }
 
-- (CGRect)zoomRectForScale:(float)scale withCenter:(CGPoint)center {
-    
-    CGRect zoomRect;
-    NSLog(@"zoom RectForScale");
-    // the zoom rect is in the content view's coordinates. 
-    //    At a zoom scale of 1.0, it would be the size of the imageScrollView's bounds.
-    //    As the zoom scale decreases, so more content is visible, the size of the rect grows.
-    zoomRect.size.height = [zoomView frame].size.height / scale;
-    zoomRect.size.width  = [zoomView frame].size.width  / scale;
-    
-    // choose an origin so as to get the right center.
-    zoomRect.origin.x    = center.x - (zoomRect.size.width  / 2.0);
-    zoomRect.origin.y    = center.y - (zoomRect.size.height / 2.0);
-    
-    return zoomRect;
-}
+
 
 #pragma mark UIScrollViewDelegate methods
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView 
@@ -312,7 +298,26 @@
     NSLog(@"did end decelerating");
 }
 
-
+-(void)setZoomView:(UIScrollView *)zoomView
+{
+    NSLog(@"set zoom View?");
+}
+- (CGRect)zoomRectForScale:(float)scale withCenter:(CGPoint)center {
+    
+    CGRect zoomRect;
+    NSLog(@"zoom RectForScale");
+    // the zoom rect is in the content view's coordinates. 
+    //    At a zoom scale of 1.0, it would be the size of the imageScrollView's bounds.
+    //    As the zoom scale decreases, so more content is visible, the size of the rect grows.
+    zoomRect.size.height = [zoomView frame].size.height / scale;
+    zoomRect.size.width  = [zoomView frame].size.width  / scale;
+    
+    // choose an origin so as to get the right center.
+    zoomRect.origin.x    = center.x - (zoomRect.size.width  / 2.0);
+    zoomRect.origin.y    = center.y - (zoomRect.size.height / 2.0);
+    
+    return zoomRect;
+}
 
 
 

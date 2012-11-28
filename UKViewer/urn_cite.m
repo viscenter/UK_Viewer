@@ -12,7 +12,7 @@
 
 @interface urn_cite ()
 //@property (strong, nonatomic) imgcache *cache;
-@property (strong, nonatomic) UIImage *SimpleImage;
+//@property (strong, nonatomic) UIImage *SimpleImage;
 @end
 
 
@@ -193,6 +193,8 @@
     UIImage *image = [[UIImage alloc] initWithData: data];
     return image;
 }
+
+
 
 /*
 -(void)speedTest
