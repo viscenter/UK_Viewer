@@ -155,16 +155,15 @@
 -(void) addbackGroundImage{
     CGRect const screensize =[[UIScreen mainScreen] bounds];
     
-    //UIImage
-    backGround= [[UIImage alloc] init];
-    backGround = [urn startImage];
 
+    
     //UIScrollView
     zoomView = [[UIScrollView alloc] initWithFrame:[[self view] bounds]];
     [zoomView setFrame:screensize];
+    [zoomView setBounds:screensize];
     [zoomView setBounces:NO];
     
-    [zoomView setBackgroundColor:[UIColor blackColor]];
+    //[zoomView setBackgroundColor:[UIColor blackColor]];
     [zoomView setDelegate:self];
     [self.view addSubview:zoomView];
     
@@ -186,28 +185,34 @@
     [zoomView addSubview:compositView];
 
 
-    //Layer one
-    layer1 = [[UIImage alloc] init];
-    layer1 = [UIImage imageNamed:@"vandalized.jpg"];
+    //CITE URN Image
+    backGround= [[UIImage alloc] init];
+    backGround = [urn startImage];
     
-    //UIImageView background image (layer 0)
+    //Layer one Image
+    UIImage *temp = [UIImage imageNamed:@"form2.png"];
+    layer1 = [ UIImage imageWithCGImage:[temp CGImage]
+                                  scale:5
+                            orientation:UIImageOrientationUp]; 
+    
+    
+    
+    //UIImageView background image setup (layer 0) URN image view
     bgController = [[UIImageView alloc ]initWithImage:backGround];
     [bgController setFrame: [zoomView frame] ];
     [bgController setTag:BACKGROUND_TAG];
-    
     [compositView addSubview:bgController];
-
     
-
-    
+    //UIImageView Layer1 set up
     layer1Controller = [[UIImageView alloc] initWithImage:layer1];
     [bgController setFrame: [zoomView frame] ];
     [layer1Controller setTag:LAYER_1_TAG];
     [compositView addSubview:layer1Controller];
     
-    
+   
     
 
+    
     
 
 }
@@ -371,26 +376,45 @@
     
     if( [sender selectedSegmentIndex] ==0 )
     {
+        
+        layer1Controller.alpha =0;
         NSLog(@"seg0");
-        [UIView transitionFromView:layer1Controller
+        [UIView beginAnimations:@"fade in" context:nil];
+        [UIView setAnimationDuration:1.0];
+        layer1Controller.alpha = 1.0;
+        [UIView commitAnimations];
+
+        /* [UIView transitionFromView:layer1Controller
                         toView:bgController
                       duration:1.0
                        options:UIViewAnimationOptionTransitionCrossDissolve
                     completion:^(BOOL finished) {
                         // animation completed
-                    }];
+         
+        
+        }];
+    */
     }
     else if( [sender selectedSegmentIndex] ==1 )
     {
         NSLog(@"seg1");
-            [UIView transitionFromView:bgController
+           
+        layer1Controller.alpha =1.0;
+        NSLog(@"seg0");
+        [UIView beginAnimations:@"fade in" context:nil];
+        [UIView setAnimationDuration:1.0];
+        layer1Controller.alpha = 0;
+        [UIView commitAnimations];
+        /*[UIView transitionFromView:bgController
                                 toView:layer1Controller
                               duration:1.0
                                options:UIViewAnimationOptionTransitionCrossDissolve
                             completion:^(BOOL finished){
                                 // animation completed
-                        }];
-    }
+          
+         }];
+    */
+}
     else
         {}
         
@@ -477,6 +501,19 @@ NSLog(@"in roatate");
 }
 
 
-
+/*
+-(void)alinmentTool
+{
+    UINavigationBar *temp =  [UINavigationBar alloc] initWithFrame:[CGRectMake(50, 50, 200, 200)];
+    
+    UIButton *up = [UIButton alloc] initWithFrame:[CGRectMake(10, 10, 50, 50)]
+    UIButton *lower = [UIButton alloc] initWithFrame:[CGRectMake(10, 60, 50, 50)]
+    UIButton *left = [UIButton alloc] initWithFrame:[CGRectMake(100, 10, 50, 50)]
+    UIButton *right = [UIButton alloc] initWithFrame:[CGRectMake(100, 60, 50, 50)]
+    
+    temp su
+    
+}
+*/
 
 @end
