@@ -56,7 +56,7 @@
     UIButton *chadGospelButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [chadGospelButton setFrame:buttonFrame];
     [chadGospelButton setBackgroundImage:[UIImage imageNamed:@"button.jpg"] forState:UIControlStateNormal];
-    [chadGospelButton setTitle:@"Go to page one" forState:UIControlStateNormal];
+    [chadGospelButton setTitle:@"Go to page 11" forState:UIControlStateNormal];
     [chadGospelButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [chadGospelButton addTarget:self action:@selector(buttonPressed) forControlEvents:UIControlEventTouchUpInside];
     

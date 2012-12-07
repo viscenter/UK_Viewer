@@ -25,6 +25,7 @@
 @synthesize seg = seg;
 @synthesize compositView = compositView;
 @synthesize layer1 = layer1;
+@synthesize layer2Controller = layer2Controller;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -56,6 +57,127 @@
     
     return;
 }
+
+
+-(void) setUp_urn_cite_Class
+{
+    // if (urn) NSLog(@"true");
+    
+    if(!urn){
+        urn = [[urn_cite alloc] initWithMachine:@"http://amphoreus.hpcc.uh.edu/tomcat/chsimg/Img?&request=GetBinaryImage&urn=" 
+                                           size:@"1000" 
+                                           base:@"urn:cite:fufolioimg:"
+                                           type:@"ChadRGB." 
+                                            doc:@"Chad"
+                                             //This is a better crop but it makes aglinment difficult
+                                           //crop:@":0.07,0.08,0.8.8,0.79&w="]; 
+                                           crop:@"&w="]; 
+        
+        
+        //   urn = [[urn_cite alloc] init];
+        NSLog(@"alloc urn");
+    }
+    
+    
+    
+    return;
+}
+
+-(void) addbackGroundImage{
+    CGRect const screensize =[[UIScreen mainScreen] bounds];
+    
+    
+    
+    //UIScrollView
+    zoomView = [[UIScrollView alloc] initWithFrame:[[self view] bounds]];
+    [zoomView setFrame:screensize];
+    [zoomView setBounds:screensize];
+    [zoomView setBounces:NO];
+    [zoomView setBackgroundColor:[UIColor blackColor]];
+    
+    [zoomView setDelegate:self];
+    [self.view addSubview:zoomView];
+    
+    
+    //float minimumScale = [zoomView frame].size.width  / [bgController frame].size.width;
+    float minimumScale = 1;
+    float maxScale = 10;
+    
+    [zoomView setMaximumZoomScale:maxScale];
+    [zoomView setMinimumZoomScale:minimumScale];
+    [zoomView setZoomScale:minimumScale];
+    [zoomView setScrollsToTop:YES];
+    
+    
+    
+    //Composite view
+    compositView = [[UIView alloc] initWithFrame:screensize];
+    [compositView setTag:COMP_VIEW_TAG];
+    [zoomView addSubview:compositView];
+    
+    
+    //CITE URN Image
+    backGround= [[UIImage alloc] init];
+    //backGround = [urn startImage];
+    backGround = [urn gotopage:11];
+    
+    //Layer one Image
+    UIImage *temp = [ UIImage imageNamed:@"12_good.png"];
+    layer1 = [UIImage imageWithCGImage:[temp CGImage]
+                                 scale: 1
+                           orientation:UIImageOrientationUp  ];
+    
+    //UIImage *temp = [UIImage imageNamed:@"form2.png"];
+    //   layer1 = [ UIImage imageWithCGImage:[temp CGImage]
+    //                                 scale:7.05
+    //                        orientation:UIImageOrientationUp]; 
+    
+    
+    
+    //UIImageView background image setup (layer 0) URN image view
+    bgController = [[UIImageView alloc ]initWithImage:backGround];
+    [bgController setFrame: [zoomView frame] ];
+    [bgController setTag:BACKGROUND_TAG];
+    [compositView addSubview:bgController];
+    
+    //UIImageView Layer1 set up
+    layer1Controller = [[UIImageView alloc] initWithImage:layer1];
+    [layer1Controller setFrame:[zoomView frame]];
+    [layer1Controller setContentMode:UIViewContentModeScaleAspectFit];
+    [bgController setFrame: [zoomView frame] ];
+    [layer1Controller setTag:LAYER_1_TAG];
+    [compositView addSubview:layer1Controller];
+    
+    [layer1Controller setAlpha:0]; //Inital set up
+    
+    
+    //UILableView
+    CGRect textFrame;
+    textFrame.origin.x = zoomView.frame.origin.x +120; 
+    textFrame.origin.y = zoomView.frame.origin.y +160;
+    textFrame.size.height = zoomView.frame.size.height * 2/10; 
+    textFrame.size.width = zoomView.frame.size.width* 2/3;
+    layer2Controller = [[UILabel alloc] initWithFrame:textFrame];
+    [layer2Controller setLineBreakMode:UILineBreakModeWordWrap];
+    [layer2Controller setNumberOfLines:100];
+    [layer2Controller setFont:[UIFont fontWithName:@"Helvetica" size:(18.0)]];
+    [layer2Controller setTextColor:[UIColor whiteColor]];
+    [layer2Controller setText:@"For the past year, the engineering team at the Google Cultural Institute has been working steadfastly and intensely to prepare for today: the new launch of 42 online exhibitions at http://google.com/culturalinstitute. As Visiting Scientist with the engineering team I have had a first-hand view of the process and a chance to get to know the engineers and some of the technology behind the code that is driving the launch"];
+    [layer2Controller setAlpha:0];
+    
+    
+    [layer2Controller setBackgroundColor:[UIColor clearColor]];
+    
+    
+    
+    [compositView addSubview:layer2Controller];
+    
+
+
+    
+    
+}
+
 
 
 -(void) addNavBar{
@@ -113,126 +235,28 @@
     
     //seg Frame
     CGRect segFrame;
-    segFrame.origin.x = navFrame.size.width * 8/10;
+    segFrame.origin.x = navFrame.size.width * 7/10;
     segFrame.origin.y = navFrame.size.height*1/6;
-    segFrame.size.width = navFrame.size.width/6;
+    segFrame.size.width = navFrame.size.width/4;
     segFrame.size.height = navFrame.size.height/2;
     
     //create the seg layers
     seg = [[UISegmentedControl alloc ] initWithFrame: segFrame];
-    [seg insertSegmentWithTitle:@"layer0" atIndex:0 animated:NO];
-    [seg insertSegmentWithTitle:@"layer1" atIndex:1 animated:NO];
+    [seg insertSegmentWithTitle:@"Plain" atIndex:0 animated:NO];
+    [seg insertSegmentWithTitle:@"Text" atIndex:1 animated:NO];
+    [seg insertSegmentWithTitle:@"Fonts" atIndex:2 animated:NO];
     
     [seg addTarget:self action:@selector(segChanged:) forControlEvents:UIControlEventValueChanged];
-
+    [seg setSelectedSegmentIndex:0]; //inital setup
+    
     //add seg to the nave bar
     [navBar addSubview:seg];    
-    return;
-}
-
--(void) setUp_urn_cite_Class
-{
-   // if (urn) NSLog(@"true");
     
-    if(!urn){
-        urn = [[urn_cite alloc] initWithMachine:@"http://amphoreus.hpcc.uh.edu/tomcat/chsimg/Img?&request=GetBinaryImage&urn=" 
-                                           size:@"1000" 
-                                           base:@"urn:cite:fufolioimg:"
-                                           type:@"ChadRGB." 
-                                            doc:@"Chad"
-                                           crop:@":0.07,0.08,0.8.8,0.79&w="];
-    
-    
-     //   urn = [[urn_cite alloc] init];
-        NSLog(@"alloc urn");
-    }
-   
-    
+    [self LookForExtraDataForTheSeg];
     
     return;
 }
 
--(void) addbackGroundImage{
-    CGRect const screensize =[[UIScreen mainScreen] bounds];
-    
-
-    
-    //UIScrollView
-    zoomView = [[UIScrollView alloc] initWithFrame:[[self view] bounds]];
-    [zoomView setFrame:screensize];
-    [zoomView setBounds:screensize];
-    [zoomView setBounces:NO];
-    
-    //[zoomView setBackgroundColor:[UIColor blackColor]];
-    [zoomView setDelegate:self];
-    [self.view addSubview:zoomView];
-    
-    
-    //float minimumScale = [zoomView frame].size.width  / [bgController frame].size.width;
-    float minimumScale = 1;
-    float maxScale = 10;
-    
-    [zoomView setMaximumZoomScale:maxScale];
-    [zoomView setMinimumZoomScale:minimumScale];
-    [zoomView setZoomScale:minimumScale];
-    [zoomView setScrollsToTop:YES];
-     
-    
-    
-    //Composite view
-    compositView = [[UIView alloc] initWithFrame:screensize];
-    [compositView setTag:COMP_VIEW_TAG];
-    [zoomView addSubview:compositView];
-
-
-    //CITE URN Image
-    backGround= [[UIImage alloc] init];
-    backGround = [urn startImage];
-    
-    //Layer one Image
-    UIImage *temp = [UIImage imageNamed:@"form2.png"];
-    layer1 = [ UIImage imageWithCGImage:[temp CGImage]
-                                  scale:5
-                            orientation:UIImageOrientationUp]; 
-    
-    
-    
-    //UIImageView background image setup (layer 0) URN image view
-    bgController = [[UIImageView alloc ]initWithImage:backGround];
-    [bgController setFrame: [zoomView frame] ];
-    [bgController setTag:BACKGROUND_TAG];
-    [compositView addSubview:bgController];
-    
-    //UIImageView Layer1 set up
-    layer1Controller = [[UIImageView alloc] initWithImage:layer1];
-    [bgController setFrame: [zoomView frame] ];
-    [layer1Controller setTag:LAYER_1_TAG];
-    [compositView addSubview:layer1Controller];
-    
-   
-    
-
-    
-    
-
-}
-/*
--(void)loadButtons{
-    CGRect const screensize =[[UIScreen mainScreen] bounds];
-    CGRect buttonFrame;
-    
-
-    
-    UIButton *chadGospelButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [chadGospelButton setFrame:buttonFrame];
-    [chadGospelButton setBackgroundImage:[UIImage imageNamed:@"home_button.png"] forState:UIControlStateNormal];
-    [chadGospelButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [chadGospelButton addTarget:self action:@selector(buttonPressed) forControlEvents:UIControlEventTouchUpInside];
-    
-    [[self view] addSubview:chadGospelButton];
-    
-}
-*/
 -(void) guesterEvents{
 
 //ADDING GESTURES
@@ -284,8 +308,8 @@
     
 }
 
-
-
+//Below this point all functions are EVENT BASED
+//////////////////////////////////////////////////
 
 
 -(void)twoFingerPinch :(UIPinchGestureRecognizer *) recognizer
@@ -313,6 +337,7 @@
 */
      
 }
+
 
 
 
@@ -371,17 +396,18 @@
 
 
 - (void)segChanged:(id) sender
-{
-    NSLog(@"segHasChanged");
-    
-    if( [sender selectedSegmentIndex] ==0 )
+{    
+    if( [sender selectedSegmentIndex] ==2 )
     {
         
-        layer1Controller.alpha =0;
-        NSLog(@"seg0");
+       // layer1Controller.alpha =0;
+        NSLog(@"seg Font");
         [UIView beginAnimations:@"fade in" context:nil];
         [UIView setAnimationDuration:1.0];
         layer1Controller.alpha = 1.0;
+        layer2Controller.alpha = 0;
+        bgController.alpha = 1;
+
         [UIView commitAnimations];
 
         /* [UIView transitionFromView:layer1Controller
@@ -395,15 +421,16 @@
         }];
     */
     }
-    else if( [sender selectedSegmentIndex] ==1 )
+    else if( [sender selectedSegmentIndex] ==0 )
     {
-        NSLog(@"seg1");
            
-        layer1Controller.alpha =1.0;
-        NSLog(@"seg0");
+        //layer1Controller.alpha =.0;
+        NSLog(@"Seg Plain");
         [UIView beginAnimations:@"fade in" context:nil];
         [UIView setAnimationDuration:1.0];
         layer1Controller.alpha = 0;
+        layer2Controller.alpha = 0;
+        bgController.alpha = 1;
         [UIView commitAnimations];
         /*[UIView transitionFromView:bgController
                                 toView:layer1Controller
@@ -414,9 +441,19 @@
           
          }];
     */
-}
-    else
-        {}
+    }
+    else if ([sender selectedSegmentIndex ] == 1)
+    {      
+        NSLog(@"seg text");
+        
+        //layer1Controller.alpha =1.0;
+        [UIView beginAnimations:@"fade in" context:nil];
+        [UIView setAnimationDuration:1.0];
+        layer2Controller.alpha = 1;
+        layer1Controller.alpha= 0;
+        bgController.alpha = .7;
+        [UIView commitAnimations];
+    }
         
         return;
     
@@ -478,7 +515,8 @@ NSLog(@"in roatate");
    NSLog(@"in right swipe");
    backGround = [urn pervImage];
    [bgController setImage:backGround];
-  
+    
+    [self LookForExtraDataForTheSeg   ];
 
 }
 
@@ -490,10 +528,51 @@ NSLog(@"in roatate");
     backGround = [urn nextImage];
     [bgController setImage:backGround];
 
-    
+    [self LookForExtraDataForTheSeg];
     
 }
 
+-(void)LookForExtraDataForTheSeg
+{
+    [seg removeSegmentAtIndex:2 animated:NO];
+
+    NSString *fileName =nil;
+    if ( [urn pageNumber] == 11)
+        fileName = @"forms.png";
+    else if ( [urn pageNumber] == 12)
+        fileName = @"12_good.png";
+    else if ( [urn pageNumber] == 13)
+    fileName = @"13_good.png";
+    else if ( [urn pageNumber] == 14)
+    fileName = @"14_good.png";
+    else if ( [urn pageNumber] == 15)
+    fileName = @"15_good.png";
+    else if ( [urn pageNumber] == 16)
+    fileName = @"16_good.png";
+    
+    if(fileName != nil)
+    {
+        [seg insertSegmentWithTitle:@"Fonts" atIndex:2 animated:NO];
+        layer1 = [UIImage imageNamed: fileName];
+        [layer1Controller setImage:layer1];
+    }
+    else {
+        [layer1Controller setAlpha:0];
+    }
+    /*
+    NSLog(@"looking for any data on this image");
+    NSString* path = [[NSBundle mainBundle] pathForResource:@"jb.metainfo" 
+                                                     ofType:@"txt"];
+    NSString *tempFile = [[NSString alloc] initWithContentsOfFile:path encoding:NSASCIIStringEncoding error:Nil]; 
+    NSLog(tempFile);
+    NSRange rangeOfNumber = [ tempFile rangeOfString:[NSString stringWithFormat:@"%d", [urn pageNumber]]];
+    
+    if(rangeOfNumber != NSNotFound)
+        NSString *substring = 
+    //substring = (rangeOfNumber.location != NSNotFound) ? [tempFile substringToIndex:rangeOfNumber.location] : nil;
+    
+     */
+}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {

@@ -24,6 +24,7 @@
 @property (strong, nonatomic) UISegmentedControl *seg ;
 @property (strong, nonatomic) IBOutlet UIView * compositView;
 @property (strong, nonatomic) UIImage *layer1;
+@property (strong, nonatomic) UILabel *layer2Controller;
 
 -(void)getPage:(int)sender;
 
